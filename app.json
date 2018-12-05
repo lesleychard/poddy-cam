@@ -9,12 +9,12 @@
       "android"
     ],
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1E1E1E"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
