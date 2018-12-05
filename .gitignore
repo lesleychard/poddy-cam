@@ -5,4 +5,7 @@ npm-debug.*
 *.p12
 *.key
 *.mobileprovision
+.DS_Store
 .env
+.vscode/
+npm-debug.log*
