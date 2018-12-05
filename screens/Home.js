@@ -1,25 +1,44 @@
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {
-    Text,
-    View,
-} from 'react-native';
-import styled from 'styled-components';
-
-const Container = styled(View)`
-    flex: 1;
-    background-color: ${props => props.theme.palette.background};
-    color: ${props => props.theme.palette.text};
-    align-items: center;
-    justify-content: center;
-`;
+import {Text, View} from 'react-native';
+import {withTheme} from 'react-native-material-ui';
+import YouTubeButton from '../components';
 
 // eslint-disable-next-line react/prefer-stateless-function
-export default class Home extends Component {
+class Home extends Component {
+    static propTypes = {
+        theme: PropTypes.object.isRequired,
+    };
+
+    styles = () => {
+        const {theme} = this.props;
+        return {
+            view: {
+                flex: 1,
+                backgroundColor: theme.palette.canvasColor,
+                alignItems: 'center',
+                justifyContent: 'center',
+            },
+            text: {
+                color: theme.palette.primaryTextColor,
+                lineHeight: 40,
+            },
+        };
+    };
+
     render() {
+        const styles = this.styles();
         return (
-            <Container>
-                <Text>PoddyCam</Text>
-            </Container>
+            <View style={styles.view}>
+                <YouTubeButton
+                    text="Sign In"
+                />
+                <Text style={styles.text}>
+                    with YouTube
+                </Text>
+            </View>
         );
     }
 }
+
+export default withTheme(Home);
