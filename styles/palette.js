@@ -4,6 +4,7 @@ const palette = {
     accentColor: '#57D853',
     primaryTextColor: '#ffffff',
     youtubeColor: '#ff0000',
+    errorColor: '#ff0000',
 };
 
 export default palette;
