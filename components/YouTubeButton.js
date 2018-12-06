@@ -1,8 +1,7 @@
+import {Icon, Button, withTheme} from 'react-native-material-ui';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {Icon, Button, withTheme} from 'react-native-material-ui';
 
-// eslint-disable-next-line react/prefer-stateless-function
 class YouTubeButton extends Component {
     static propTypes = {
         text: PropTypes.string.isRequired,
@@ -45,7 +44,6 @@ class YouTubeButton extends Component {
                         size={40}
                     />
                 )}
-                iconSet="FontAwesome"
                 raised
                 style={{
                     container: styles.button,
