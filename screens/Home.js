@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import React, {Fragment, Component} from 'react';
 import {Text, View} from 'react-native';
 import {Snackbar, withTheme} from 'react-native-material-ui';
-import YouTubeButton from '../components';
+import {connect} from 'react-redux';
+import {YouTubeButton} from '../components';
+import {setUser} from '../state/actions';
 
 const env = require('../env.json');
 const users = require('../users.json');
 
-class Home extends Component {
+const Home = connect()(class Home extends Component {
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         navigation: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
     };
@@ -17,6 +20,11 @@ class Home extends Component {
     state = {
         error: null,
     };
+
+    // componentDidMount() {
+    //     const {navigation} = this.props;
+    //     navigation.navigate('Play');
+    // }
 
     signIn = async () => {
         const error = 'An error occurred while trying to sign in. Please try again.';
@@ -29,7 +37,7 @@ class Home extends Component {
 
             if (result.type === 'success') {
                 this.setState({error: false});
-                this.verifyUser(result.user.email);
+                this.verifyUser(result.user);
             } else {
                 this.setState({error});
             }
@@ -38,9 +46,10 @@ class Home extends Component {
         }
     }
 
-    verifyUser = (email) => {
-        const {navigation} = this.props;
-        if (users.indexOf(email) >= 0) {
+    verifyUser = (user) => {
+        const {dispatch, navigation} = this.props;
+        if (users.indexOf(user.email) >= 0) {
+            dispatch(setUser(user));
             navigation.navigate('Play');
         } else {
             const error = 'You do not have permission to view Podrick at this time.';
@@ -104,6 +113,6 @@ class Home extends Component {
             </Fragment>
         );
     }
-}
+});
 
 export default withTheme(Home);
