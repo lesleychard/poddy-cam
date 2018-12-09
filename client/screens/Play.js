@@ -74,7 +74,7 @@ const Play = connect(mapStateToProps)(class Play extends Component {
                     <Text style={styles.textBold}>
                         Welcome,
                         {' '}
-                        {user.givenName}
+                        {user.name.givenName}
                         !
                     </Text>
                     <Text style={styles.text}>

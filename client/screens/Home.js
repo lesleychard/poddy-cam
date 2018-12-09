@@ -1,4 +1,4 @@
-import {Google} from 'expo';
+import {AuthSession} from 'expo';
 import PropTypes from 'prop-types';
 import React, {Fragment, Component} from 'react';
 import {Text, View} from 'react-native';
@@ -8,7 +8,6 @@ import {YouTubeButton} from '../components';
 import {setUser} from '../state/actions';
 
 const env = require('../env.json');
-const users = require('../users.json');
 
 const Home = connect()(class Home extends Component {
     static propTypes = {
@@ -21,23 +20,49 @@ const Home = connect()(class Home extends Component {
         error: null,
     };
 
-    // componentDidMount() {
-    //     const {navigation} = this.props;
-    //     navigation.navigate('Play');
-    // }
-
     signIn = async () => {
+        const {dispatch, navigation} = this.props;
         const error = 'An error occurred while trying to sign in. Please try again.';
 
         try {
-            const result = await Google.logInAsync({
-                androidClientId: env.GOOGLE_ANDROID_CLIENT_ID,
-                scopes: ['profile', 'email'],
+            // get auth code for web server's google client
+            const result = await AuthSession.startAsync({
+                authUrl:
+                    'https://accounts.google.com/o/oauth2/v2/auth?'
+                    + `&client_id=${env.GOOGLE_AUTH_CLIENT_ID}`
+                    + `&redirect_uri=${env.EXPO_URI}`
+                    + '&response_type=code'
+                    + '&access_type=offline'
+                    + `&scope=${encodeURI('openid profile email')}`,
             });
 
             if (result.type === 'success') {
-                this.setState({error: false});
-                this.verifyUser(result.user);
+                const ws = new WebSocket(env.CAM_SERVER);
+                const params = JSON.stringify({
+                    action: 'start',
+                    ...result.params,
+                });
+
+                // send auth code to server
+                ws.onopen = () => {
+                    ws.send(params);
+                };
+
+                // recieve user data if found and verified
+                // or false if user not found or not verified
+                ws.onmessage = (e) => {
+                    const user = JSON.parse(e.data);
+                    if (user) {
+                        dispatch(setUser(user));
+                        navigation.navigate('Play');
+                    } else {
+                        // while the if statement is properly failing, setstate isn't technically working
+                        // i think it's because auth is going to redirect uri and state is overwritten,
+                        // but that's just a guess...
+                        const userError = 'You do not have permission to view Podrick at this time.';
+                        this.setState({error: userError});
+                    }
+                };
             } else {
                 this.setState({error});
             }
@@ -45,17 +70,6 @@ const Home = connect()(class Home extends Component {
             this.setState({error});
         }
     }
-
-    verifyUser = (user) => {
-        const {dispatch, navigation} = this.props;
-        if (users.indexOf(user.email) >= 0) {
-            dispatch(setUser(user));
-            navigation.navigate('Play');
-        } else {
-            const error = 'You do not have permission to view Podrick at this time.';
-            this.setState({error});
-        }
-    };
 
     hideError = () => {
         this.setState({error: null});
