@@ -1,7 +1,12 @@
-import {start, stop} from './stream';
+import {init, start, stop} from './actions';
 
+const dotenv = require('dotenv');
 const http = require('http');
 const WebSocketServer = require('websocket').server;
+
+const authClient = require('./auth/authClient');
+
+dotenv.config();
 
 const connectionArray = [];
 let nextID = 0;
@@ -12,8 +17,10 @@ const server = http.createServer(function(request, response) {
     response.end();
 });
 
-server.listen(6502, function() {
-    console.log((new Date()) + " Server is listening on port 6502");
+server.listen(process.env.APP_PORT, function() {
+    console.log(`
+        ${new Date()} Server is listening on port ${process.env.APP_PORT}
+    `);
 });
 
 const wsServer = new WebSocketServer({
@@ -28,16 +35,11 @@ wsServer.on('connect', function(connection) {
     connection.clientID = nextID;
     nextID++;
 
-    const msg = {
-        type: "id",
-        id: connection.clientID
-    };
-    connection.sendUTF(JSON.stringify(msg));
-
     connection.on('message', function (message) {
-        switch (message.utf8Data) {
+        const messageObj = JSON.parse(message.utf8Data);
+        switch (messageObj.action) {
             case 'start':
-                start();
+                start(connection, messageObj.code);
                 break;
             default:
                 stop();

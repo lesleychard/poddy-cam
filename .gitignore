@@ -1,5 +1,5 @@
-node_modules/**/*
-.expo/*
+.env
+.expo/
 npm-debug.*
 *.jks
 *.p12
@@ -10,3 +10,4 @@ env.json
 users.json
 .vscode/
 npm-debug.log*
+node_modules/

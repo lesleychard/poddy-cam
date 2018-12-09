@@ -4,6 +4,8 @@
         "start": "nodemon src/main.js --exec babel-node --presets @babel/preset-env"
     },
     "dependencies": {
+        "dotenv": "^6.2.0",
+        "googleapis": "^36.0.0",
         "rimraf": "^2.6.2",
         "websocket": "^1.0.28"
     },
