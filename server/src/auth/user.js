@@ -1,5 +1,6 @@
+import {authClient} from '../auth';
+
 const {google} = require('googleapis');
-const authClient = require('../auth/authClient');
 const users = require('../../users.json');
 
 const user = async () => {

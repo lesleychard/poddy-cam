@@ -33,7 +33,7 @@ const Home = connect()(class Home extends Component {
                     + `&redirect_uri=${env.EXPO_URI}`
                     + '&response_type=code'
                     + '&access_type=offline'
-                    + `&scope=${encodeURI('openid profile email')}`,
+                    + `&scope=${encodeURI('openid profile email https://www.googleapis.com/auth/youtube')}`,
             });
 
             if (result.type === 'success') {
