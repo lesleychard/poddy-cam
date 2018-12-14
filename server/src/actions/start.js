@@ -1,4 +1,16 @@
 import {authClient, user} from '../auth';
+import {bindBroadcast, createStream} from '../youtube';
+
+const streamSequence = async () => {
+    try {
+        createStream()
+            .then(function (inserts) {
+                bindBroadcast(inserts);
+            });
+    } catch (e) {
+        console.log(e);
+    }
+};
 
 const start = (connection, code) => {
     console.log('Action: start...');
@@ -11,7 +23,7 @@ const start = (connection, code) => {
                 if (thisUser) {
                     console.log('User found and verifed...');
                     connection.sendUTF(JSON.stringify(thisUser));
-                    // start stream
+                    streamSequence();
                 } else {
                     console.log('User cound not be found or verified...');
                     // @TODO send appropriate errors
