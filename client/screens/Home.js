@@ -51,7 +51,6 @@ const Home = connect()(class Home extends Component {
                         (response) => {
                             // eslint-disable-next-line no-underscore-dangle
                             const initData = JSON.parse(response._bodyText);
-                            console.log(initData);
                             if (initData) {
                                 dispatch(setUser(initData.user));
                                 navigation.navigate('Play');

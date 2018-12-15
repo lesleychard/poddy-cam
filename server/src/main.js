@@ -28,7 +28,7 @@ app.post('/start', async (req, res, next) => {
     // @TODO start stream
 });
 
-app.post('/stop', () => {
+app.post('/stop', (req, res) => {
     stop();
 });
 

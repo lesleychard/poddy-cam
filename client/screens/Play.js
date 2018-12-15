@@ -5,7 +5,7 @@ import {withTheme} from 'react-native-material-ui';
 import {connect} from 'react-redux';
 import {PlayButton} from '../components';
 
-const env = require('../env.json');
+// const env = require('../env.json');
 const logo = require('../assets/logo.png');
 
 const mapStateToProps = ({user}) => ({
@@ -53,11 +53,7 @@ const Play = connect(mapStateToProps)(class Play extends Component {
 
     play = () => {
         const {navigation} = this.props;
-        const ws = new WebSocket(env.CAM_SERVER);
-        ws.onopen = () => {
-            ws.send('start');
-            navigation.navigate('Stream');
-        };
+        navigation.navigate('Stream');
     };
 
     render() {

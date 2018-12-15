@@ -19,10 +19,9 @@ class Stream extends Component {
 
     stop = () => {
         const {navigation} = this.props;
-        const ws = new WebSocket(env.CAM_SERVER);
-        ws.onopen = () => {
-            ws.send('stop');
-        };
+        fetch(`${env.CAM_SERVER}/stop`, {
+            method: 'POST',
+        });
         navigation.navigate('Play');
     };
 

@@ -9,7 +9,6 @@ const youtube = google.youtube({
 
 const bindBroadcast = async (inserts) => {
     try {
-        console.log(inserts);
         const result = await youtube.liveBroadcasts.bind(
             {
                 id: inserts.broadcast,
