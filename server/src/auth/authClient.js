@@ -16,7 +16,7 @@ class AuthClient {
         google.options({auth: this.oAuth2Client});
     }
 
-    async authenticate(code) {
+    async authenticate(session, code) {
         try {
             const {tokens} = await this.oAuth2Client.getToken(code);
             this.oAuth2Client.credentials = tokens;

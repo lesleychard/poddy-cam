@@ -4,6 +4,7 @@
         "start": "nodemon src/main.js --exec babel-node --presets @babel/preset-env"
     },
     "dependencies": {
+        "body-parser": "^1.18.3",
         "dotenv": "^6.2.0",
         "express": "^4.16.4",
         "express-session": "^1.15.6",
