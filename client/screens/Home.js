@@ -37,32 +37,32 @@ const Home = connect()(class Home extends Component {
             });
 
             if (result.type === 'success') {
-                const ws = new WebSocket(env.CAM_SERVER);
-                const params = JSON.stringify({
-                    action: 'start',
-                    ...result.params,
-                });
-
-                // send auth code to server
-                ws.onopen = () => {
-                    ws.send(params);
-                };
-
-                // recieve user data if found and verified
-                // or false if user not found or not verified
-                ws.onmessage = (e) => {
-                    const user = JSON.parse(e.data);
-                    if (user) {
-                        dispatch(setUser(user));
-                        navigation.navigate('Play');
-                    } else {
-                        // while the if statement is properly failing, setstate isn't technically working
-                        // i think it's because auth is going to redirect uri and state is overwritten,
-                        // but that's just a guess...
-                        const userError = 'You do not have permission to view Podrick at this time.';
-                        this.setState({error: userError});
-                    }
-                };
+                fetch(`${env.CAM_SERVER}/init`, {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ...result.params,
+                    }),
+                })
+                    .then(
+                        (response) => {
+                            // eslint-disable-next-line no-underscore-dangle
+                            const initData = JSON.parse(response._bodyText);
+                            if (initData) {
+                                dispatch(setUser(initData.user));
+                                navigation.navigate('Play');
+                            } else {
+                                // while the if statement is properly failing, setstate isn't technically working
+                                // i think it's because auth is going to redirect uri and state is overwritten,
+                                // but that's just a guess...
+                                const userError = 'You do not have permission to view Podrick at this time.';
+                                this.setState({error: userError});
+                            }
+                        },
+                    );
             } else {
                 this.setState({error});
             }

@@ -1,48 +1,37 @@
-import {init, start, stop} from './actions';
+import {init, stop} from './actions';
 
+const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const http = require('http');
-const WebSocketServer = require('websocket').server;
+const express = require('express');
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 
-const authClient = require('./auth/authClient');
+const app = express();
 
-dotenv.config();
+app.use(
+    session({
+        store: new FileStore,
+        secret: 'keyboard cat',
+        resave: true,
+        saveUninitialized: true,
+    })
+);
 
-const connectionArray = [];
-let nextID = 0;
+app.use(bodyParser.json());
 
-const server = http.createServer(function(request, response) {
-    console.log((new Date()) + " Received request for " + request.url);
-    response.writeHead(404);
-    response.end();
+app.post('/init', async (req, res) => {
+    const initData = await init(req.session, req.body.code);
+    res.send(JSON.stringify(initData));
 });
 
-server.listen(process.env.APP_PORT, function() {
-    console.log(`
-        ${new Date()} Server is listening on port ${process.env.APP_PORT}
-    `);
+app.post('/start', async (req, res, next) => {
+    // @TODO start stream
 });
 
-const wsServer = new WebSocketServer({
-    httpServer: server,
-    autoAcceptConnections: true // You should use false here!
+app.post('/stop', (req, res) => {
+    stop();
 });
 
-wsServer.on('connect', function(connection) {
-    console.log((new Date()) + " Connection accepted.");
-    connectionArray.push(connection);
-
-    connection.clientID = nextID;
-    nextID++;
-
-    connection.on('message', function (message) {
-        const messageObj = JSON.parse(message.utf8Data);
-        switch (messageObj.action) {
-            case 'start':
-                start(connection, messageObj.code);
-                break;
-            default:
-                stop();
-        }
-    });
+app.listen(process.env.APP_PORT, () => {
+    console.log(`Server is listening on port ${process.env.APP_PORT}`);
 });
