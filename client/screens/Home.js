@@ -5,7 +5,10 @@ import {Text, View} from 'react-native';
 import {Snackbar, withTheme} from 'react-native-material-ui';
 import {connect} from 'react-redux';
 import {YouTubeButton} from '../components';
-import {setUser} from '../state/actions';
+import {
+    // setInserts,
+    setUser,
+} from '../state/actions';
 
 const env = require('../env.json');
 
@@ -47,22 +50,24 @@ const Home = connect()(class Home extends Component {
                         ...result.params,
                     }),
                 })
-                    .then(
-                        (response) => {
-                            // eslint-disable-next-line no-underscore-dangle
-                            const initData = JSON.parse(response._bodyText);
-                            if (initData) {
-                                dispatch(setUser(initData.user));
-                                navigation.navigate('Play');
-                            } else {
-                                // while the if statement is properly failing, setstate isn't technically working
-                                // i think it's because auth is going to redirect uri and state is overwritten,
-                                // but that's just a guess...
-                                const userError = 'You do not have permission to view Podrick at this time.';
-                                this.setState({error: userError});
-                            }
-                        },
-                    );
+                    .then((response) => {
+                        // eslint-disable-next-line no-underscore-dangle
+                        const initData = JSON.parse(response._bodyText);
+                        if (initData) {
+                            dispatch(setUser(initData.user));
+                            // dispatch(setInserts(initData.inserts));
+                            navigation.navigate('Play');
+                        } else {
+                            // while the if statement is properly failing, setstate isn't technically working
+                            // i think it's because auth is going to redirect uri and state is overwritten,
+                            // but that's just a guess...
+                            const userError = 'You do not have permission to view Podrick at this time.';
+                            this.setState({error: userError});
+                        }
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                    });
             } else {
                 this.setState({error});
             }

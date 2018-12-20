@@ -7,19 +7,17 @@ const youtube = google.youtube({
     auth: authClient.oAuth2Client,
 });
 
-const bindBroadcast = async (inserts) => {
+const deleteBroadcast = async (id) => {
     try {
-        const result = await youtube.liveBroadcasts.bind(
+        const result = await youtube.liveBroadcasts.delete(
             {
-                id: inserts.broadcast,
-                part: 'id',
-                streamId: inserts.stream,
-            },
+                id,
+            }
         );
         return result;
     } catch (e) {
         console.log(e);
     }
-};
+}
 
-export default bindBroadcast;
+export default deleteBroadcast;

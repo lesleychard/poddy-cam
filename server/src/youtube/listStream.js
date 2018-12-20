@@ -7,19 +7,18 @@ const youtube = google.youtube({
     auth: authClient.oAuth2Client,
 });
 
-const bindBroadcast = async (inserts) => {
+const listStream = async (id) => {
     try {
-        const result = await youtube.liveBroadcasts.bind(
+        const result = await youtube.liveStreams.list(
             {
-                id: inserts.broadcast,
-                part: 'id',
-                streamId: inserts.stream,
+                id,
+                part: 'id,status,cdn',
             },
         );
-        return result;
+        return result.data.items[0];
     } catch (e) {
         console.log(e);
     }
-};
+}
 
-export default bindBroadcast;
+export default listStream;

@@ -1,15 +1,19 @@
 {
     "main": "server.js",
     "scripts": {
-        "start": "nodemon src/main.js --ignore sessions/* --exec babel-node --presets @babel/preset-env"
+        "start:server": "nodemon src/main.js --ignore sessions/ --exec babel-node --presets @babel/preset-env",
+        "start:obs": "nodemon -r dotenv/config src/obs.js --ignore sessions/"
     },
     "dependencies": {
         "body-parser": "^1.18.3",
         "dotenv": "^6.2.0",
         "express": "^4.16.4",
+        "express-handlebars": "^3.0.0",
         "express-session": "^1.15.6",
         "googleapis": "^36.0.0",
         "moment": "^2.22.2",
+        "node-fetch": "^2.3.0",
+        "obs-websocket-js": "^1.2.0",
         "rimraf": "^2.6.2",
         "session-file-store": "^1.2.0",
         "websocket": "^1.0.28"
@@ -19,6 +23,7 @@
         "@babel/core": "^7.2.0",
         "@babel/node": "^7.2.0",
         "@babel/preset-env": "^7.2.0",
-        "nodemon": "^1.18.7"
+        "nodemon": "^1.18.7",
+        "shelljs": "^0.8.3"
     }
 }
