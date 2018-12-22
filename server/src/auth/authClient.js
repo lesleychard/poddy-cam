@@ -16,10 +16,12 @@ class AuthClient {
         google.options({auth: this.oAuth2Client});
     }
 
+    // keeping this session argument here for later
     async authenticate(session, code) {
         try {
             const {tokens} = await this.oAuth2Client.getToken(code);
             this.oAuth2Client.credentials = tokens;
+            // @TODO save and read tokens from session
         } catch (e) {
             console.log(e);
         }

@@ -1,6 +1,7 @@
 import {LinearGradient} from 'expo';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {
     Image,
     View,
@@ -11,18 +12,30 @@ import {Button, Icon, withTheme} from 'react-native-material-ui';
 const env = require('../env.json');
 const logo = require('../assets/logo.png');
 
-class Stream extends Component {
+const mapStateToProps = ({inserts}) => ({
+    inserts: inserts.inserts,
+});
+
+const Stream = connect(mapStateToProps)(class Stream extends Component {
     static propTypes = {
+        inserts: PropTypes.object.isRequired,
         navigation: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
     };
 
-    stop = () => {
-        const {navigation} = this.props;
-        fetch(`${env.CAM_SERVER}/stop`, {
+    componentDidMount() {
+        const {inserts} = this.props;
+        fetch(`${env.CAM_SERVER}/play/broadcast/${inserts.broadcast}/stream/${inserts.stream}`, {
             method: 'POST',
         });
-        navigation.navigate('Play');
+    }
+
+    stop = () => {
+        const {inserts, navigation} = this.props;
+        fetch(`${env.CAM_SERVER}/stop/broadcast/${inserts.broadcast}/stream/${inserts.stream}`, {
+            method: 'POST',
+        });
+        navigation.navigate('Home');
     };
 
     styles = () => {
@@ -68,7 +81,7 @@ class Stream extends Component {
     };
 
     render() {
-        const {theme} = this.props;
+        const {inserts, theme} = this.props;
         const styles = this.styles();
         return (
             <View style={styles.view}>
@@ -79,7 +92,7 @@ class Stream extends Component {
                         javaScriptEnabled
                         domStorageEnabled
                         source={{
-                            uri: `https://www.youtube.com/embed/${env.YOUTUBE_VIDEO_ID}?rel=0&autoplay=1&showinfo=0&controls=0`,
+                            uri: `${env.CAM_SERVER}/stream/broadcast/${inserts.broadcast}/stream/${inserts.stream}`,
                         }}
                         mediaPlaybackRequiresUserAction={false}
                     />
@@ -112,6 +125,6 @@ class Stream extends Component {
             </View>
         );
     }
-}
+});
 
 export default withTheme(Stream);

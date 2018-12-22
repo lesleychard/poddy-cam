@@ -1,11 +1,4 @@
 import {authClient, user} from '../auth';
-import {bindBroadcast, createStream} from '../youtube';
-
-const streamSequence = async () => {
-    const inserts = await createStream();
-    bindBroadcast(inserts);
-    return inserts;
-};
 
 const init = async (session, code) => {
     console.log('Starting action: init...');
@@ -17,9 +10,9 @@ const init = async (session, code) => {
                 const thisUser = await user();
                 if (thisUser) {
                     console.log('User found and verifed...');
+                    const inserts = session.inserts;
                     const initData = {
                         user: thisUser,
-                        inserts: await streamSequence(),
                     };
                     return initData;
                 } else {

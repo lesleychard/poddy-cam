@@ -7,19 +7,19 @@ const youtube = google.youtube({
     auth: authClient.oAuth2Client,
 });
 
-const bindBroadcast = async (inserts) => {
+const transitionBroadcast = async (id, status) => {
     try {
-        const result = await youtube.liveBroadcasts.bind(
+        const result = await youtube.liveBroadcasts.transition(
             {
-                id: inserts.broadcast,
-                part: 'id',
-                streamId: inserts.stream,
+                broadcastStatus: status,
+                id,
+                part: 'id,contentDetails,status',
             },
         );
         return result;
     } catch (e) {
         console.log(e);
     }
-};
+}
 
-export default bindBroadcast;
+export default transitionBroadcast;

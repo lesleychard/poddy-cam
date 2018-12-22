@@ -4,8 +4,11 @@ import {Image, Text, View} from 'react-native';
 import {withTheme} from 'react-native-material-ui';
 import {connect} from 'react-redux';
 import {PlayButton} from '../components';
+import {
+    setInserts,
+} from '../state/actions';
 
-// const env = require('../env.json');
+const env = require('../env.json');
 const logo = require('../assets/logo.png');
 
 const mapStateToProps = ({user}) => ({
@@ -14,6 +17,7 @@ const mapStateToProps = ({user}) => ({
 
 const Play = connect(mapStateToProps)(class Play extends Component {
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         navigation: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
@@ -52,8 +56,18 @@ const Play = connect(mapStateToProps)(class Play extends Component {
     };
 
     play = () => {
-        const {navigation} = this.props;
-        navigation.navigate('Stream');
+        const {dispatch, navigation} = this.props;
+        fetch(`${env.CAM_SERVER}/start`, {
+            method: 'POST',
+        })
+            .then((response) => {
+                // eslint-disable-next-line no-underscore-dangle
+                const inserts = JSON.parse(response._bodyText);
+                if (inserts) {
+                    dispatch(setInserts(inserts));
+                    navigation.navigate('Stream');
+                }
+            });
     };
 
     render() {
