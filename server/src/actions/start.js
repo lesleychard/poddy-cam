@@ -82,7 +82,7 @@ const stream = async (session) => {
 
     console.log('stream key: ', streamKey);
 
-    shell.exec(`STREAM_KEY=${streamKey} ./scripts/stream.sh`);
+    shell.exec(`STREAM_KEY=${streamKey} ./scripts/stream.sh > logs/ffmpeg.txt 2>&1 &`);
 
     return inserts;
 };

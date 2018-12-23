@@ -12,3 +12,4 @@ users.json
 npm-debug.log*
 node_modules/
 sessions/
+logs/
