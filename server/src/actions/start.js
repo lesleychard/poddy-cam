@@ -6,7 +6,6 @@ import {
     insertBroadcast,
 } from '../youtube';
 
-const fetch = require('node-fetch');
 const shell = require('shelljs');
 
 const findBroadcast = async () => {
