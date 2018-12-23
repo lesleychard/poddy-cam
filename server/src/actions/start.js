@@ -7,6 +7,7 @@ import {
 } from '../youtube';
 
 const fetch = require('node-fetch');
+const shell = require('shelljs');
 
 const findBroadcast = async () => {
     const broadcasts = await listBroadcast();
@@ -80,16 +81,9 @@ const stream = async (session) => {
 
     const streamKey = await getStreamKey(inserts.stream);
 
-    fetch(`http://localhost:${process.env.OBS_HTTP_PORT}/start`, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            streamKey,
-        }),
-    });
+    console.log('stream key: ', streamKey);
+
+    shell.exec(`STREAM_KEY=${streamKey} ./scripts/stream.sh`);
 
     return inserts;
 };

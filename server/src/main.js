@@ -31,6 +31,10 @@ app.use(
 
 app.use(bodyParser.json());
 
+app.get('ping', (req, res) => {
+    res.send('Oh hey there 😘');
+});
+
 app.post('/init', async (req, res) => {
     const initData = await init(req.session, req.body.code);
     res.send(JSON.stringify(initData));

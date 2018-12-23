@@ -8,10 +8,7 @@ const stop = async (broadcastId, streamId) => {
     // complete youtube broadcast (can't be reused)
     await transitionBroadcast(broadcastId, 'complete');
 
-    // stop OBS stream
-    fetch(`http://localhost:${process.env.OBS_HTTP_PORT}/stop`, {
-        method: 'POST',
-    });
+    process.exit(0);
 };
 
 export default stop;
